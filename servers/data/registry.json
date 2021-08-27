@@ -1,0 +1,90 @@
+[
+    {
+        "_id": {
+            "$oid": "60816738908c872d2e457558"
+        },
+        "name": "Shipowner company",
+        "address": "",
+        "location": "13467 Berlin",
+        "role": "shipowner",
+        "contact": "null",
+        "domain": ""
+    },
+    {
+        "_id": {
+            "$oid": "60816738908c872d2e457559"
+        },
+        "name": "Port Agent B",
+        "address": "",
+        "location": "",
+        "role": "port agent",
+        "contact": "null",
+        "domain": ""
+    },
+    {
+        "_id": {
+            "$oid": "60816738908c872d2e45755a"
+        },
+        "name": "Port Agent A",
+        "address": "",
+        "location": "null",
+        "role": "port agent",
+        "contact": "null",
+        "domain": ""
+    },
+    {
+        "_id": {
+            "$oid": "6083fb4010cb4202a8770efc"
+        },
+        "name": "Charterer",
+        "address": "",
+        "location": "null",
+        "role": "charterer",
+        "contact": "null",
+        "domain": ""
+    },
+    {
+        "_id": {
+            "$oid": "6091b4528a1e6f13e37f9c51"
+        },
+        "name": "Trader",
+        "address": "",
+        "location": "null",
+        "role": "trader",
+        "contact": "null",
+        "domain": ""
+    },
+    {
+        "_id": {
+            "$oid": "6091b4528a1e6f13e37f9c52"
+        },
+        "name": "Trading Company",
+        "address": "",
+        "location": "null",
+        "role": "buyer",
+        "contact": "null",
+        "domain": ""
+    },
+    {
+        "_id": {
+            "$oid": "60a52eae9c7b74d8ec24b900"
+        },
+        "name": "IDM Server",
+        "address": "",
+        "location": "null",
+        "role": "idm",
+        "contact": "null",
+        "domain": ""
+    },
+    {
+        "_id": {
+            "$oid": "60ad1b66872a29ee67db3abf"
+        },
+        "name": "Master",
+        "address": "",
+        "location": "null",
+        "role": "master",
+        "contact": "null",
+        "domain": ""
+    }
+]

@@ -1,0 +1,59 @@
+[
+    {
+        "contract_address": "null",
+        "charterparty": {
+            "$oid": "608ae6da7ffe5fb7f1a56e4b"
+        },
+        "vessel_id": {
+            "value": "#90291354",
+            "hash": "null"
+        },
+        "consignee": {
+            "$oid": "60816738908c872d2e457559"
+        },
+        "notify_party": {
+            "$oid": "6091b4528a1e6f13e37f9c52"
+        },
+        "cargo": {
+            "description": {
+                "value": "Wheat, whole grain, type: Einkorn",
+                "hash": "null"
+            },
+            "moisture_level": {
+                "value": "12.3%",
+                "hash": "null"
+            },
+            "nutrition_levels": {
+                "details": {
+                    "calories": 340,
+                    "protein": "13.2 grams",
+                    "carbs": "72 grams",
+                    "sugar": "0.4 grams",
+                    "fiber": "10.7 grams",
+                    "fat": "2.5 grams"
+                },
+                "value": "calories:340,protein:13.2,grams,carbs:72 grams,sugar:0.4 grams,fiber:10.7 grams,fat:2.5 grams",
+                "hash": "null"
+            },
+            "weight": {
+                "value": "80 tonnes",
+                "hash": "null"
+            }
+        },
+        "place": {
+            "value": "TODO",
+            "hash": "null"
+        },
+        "date": {
+            "value": "TODO",
+            "hash": "null"
+        },
+        "signer": {
+            "id": {
+                "$oid": "60816738908c872d2e45755a"
+            },
+            "signature": "null",
+            "on_behalf_of": "charterer"
+        }
+    }
+]

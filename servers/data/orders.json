@@ -1,0 +1,26 @@
+[
+    {
+        "charterparty": {
+            "$oid": "608ae6da7ffe5fb7f1a56e4b"
+        },
+        "buyer": {
+            "$oid": "6091b4528a1e6f13e37f9c52"
+        },
+        "date": "1620164034386",
+        "cargo": {
+            "description": "Oat, steel cut",
+            "moisture_level": "14.1%",
+            "nutrition": {
+                "calories": "290",
+                "protein": "19.2 grams",
+                "carbs": "67 grams",
+                "sugar": "0.4 grams",
+                "fiber": "14.7 grams",
+                "fat": "2.5 grams"
+            },
+            "weight": "120 tonnes"
+        },
+        "status": "open",
+        "billOfLading": "null"
+    }
+]

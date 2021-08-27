@@ -1,0 +1,69 @@
+[
+    {
+        "_id": {
+            "$oid": "608ae6da7ffe5fb7f1a56e4b"
+        },
+        "contract_address": "null",
+        "name": "Charterparty 1",
+        "charterer": {
+            "id": {
+                "$oid": "6083fb4010cb4202a8770efc"
+            },
+            "signature": "null"
+        },
+        "oracle_address": "",
+        "shipowner": {
+            "id": {
+                "$oid": "60816738908c872d2e457558"
+            },
+            "signature": "null"
+        },
+        "date": {
+            "value": 1619261331793,
+            "hash": ""
+        },
+        "place": {
+            "value": "Duisburg",
+            "hash": ""
+        },
+        "loading_port": {
+            "agent": {
+                "$oid": "60816738908c872d2e45755a"
+            },
+            "value": "Duisburg",
+            "hash": ""
+        },
+        "discharging_port": {
+            "agent": {
+                "$oid": "60816738908c872d2e457559"
+            },
+            "value": "Koblenz",
+            "hash": ""
+        },
+        "laytime": {
+            "value": 1296000000,
+            "hash": ""
+        },
+        "fine": 5000,
+        "freight_rate": {
+            "value": 5000,
+            "hash": ""
+        },
+        "max_temperature": {
+            "value": 25,
+            "hash": ""
+        },
+        "max_moisture_level": {
+            "value": 15,
+            "hash": ""
+        },
+        "max_deadweight": {
+            "value": 300,
+            "hash": ""
+        },
+        "max_volume_cap": {
+            "value": 100,
+            "hash": ""
+        }
+    }
+]

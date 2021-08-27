@@ -1,0 +1,30 @@
+[
+    {
+        "name": "POD_167728994",
+        "contract_address": "null",
+        "billOfLading": {
+            "$oid": "60959ccd13cc78baf9284b24"
+        },
+        "consignee": {
+            "$oid": "60816738908c872d2e457559"
+        },
+        "shipowner": {
+            "$oid": "60816738908c872d2e457558"
+        },
+        "time_delivery": {
+            "value": "167728994",
+            "hash": ""
+        },
+        "cargo": {
+            "weight": {
+                "value": "",
+                "hash": ""
+            },
+            "condition": {
+                "value": "",
+                "hash": ""
+            }
+        },
+        "signature": "null"
+    }
+]
