@@ -58,10 +58,10 @@
         "_id": {
             "$oid": "6091b4528a1e6f13e37f9c52"
         },
-        "name": "Trading Company",
+        "name": "Customer Company",
         "address": "",
         "location": "null",
-        "role": "buyer",
+        "role": "customer",
         "contact": "null",
         "domain": ""
     },

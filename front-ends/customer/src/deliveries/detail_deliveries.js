@@ -96,6 +96,7 @@ const DetailDelivery = ({ item, onUpdate }) => {
             item.moisture_level,
             item.weight,
             item.discharging_time,
+            item.discharging_port,
         ]);
         nextStep();
 
@@ -164,6 +165,8 @@ const DetailDelivery = ({ item, onUpdate }) => {
                                 {new Date(
                                     parseInt(item.loading_time)
                                 ).toLocaleString()}
+                                {", "}
+                                {item.loading_port}
                             </pre>
                         </td>
                     </tr>
@@ -180,6 +183,8 @@ const DetailDelivery = ({ item, onUpdate }) => {
                                 {new Date(
                                     parseInt(item.discharging_time)
                                 ).toLocaleString()}
+                                {", "}
+                                {item.discharging_port}
                             </pre>
                         </td>
                     </tr>

@@ -26,6 +26,7 @@ const CreatePOD = ({ history, item, makeToast, onAdd, onUpdate }) => {
 
     const [isTimeInvalid, setIsTimeInvalid] = useState(false);
     const [isDateInvalid, setIsDateInvalid] = useState(false);
+    const [isLocationInvalid, setIsLocationInvalid] = useState(false);
     const [isWeightInvalid, setIsWeightInvalid] = useState(false);
     const [isMoistureInvalid, setIsMoistureInvalid] = useState(false);
     const [isConditionInvalid, setIsConditionInvalid] = useState(false);
@@ -41,11 +42,13 @@ const CreatePOD = ({ history, item, makeToast, onAdd, onUpdate }) => {
         const weight = document.querySelector("#weight");
         const moisture_level = document.querySelector("#moisture_level");
         const condition = document.querySelector("#condition");
+        const location = document.querySelector("#location");
 
         const values = [
             { o: time, setState: setIsTimeInvalid },
             { o: date, setState: setIsDateInvalid },
             { o: weight, setState: setIsWeightInvalid },
+            { o: location, setState: setIsLocationInvalid },
             { o: moisture_level, setState: setIsMoistureInvalid },
             { o: condition, setState: setIsConditionInvalid },
         ];
@@ -60,6 +63,7 @@ const CreatePOD = ({ history, item, makeToast, onAdd, onUpdate }) => {
             consignee: user._id,
             shipowner: item.charterparty.shipowner.id,
             time_delivery: Date.parse(`${date.value} ${time.value}`),
+            port: location.value,
             cargo: {
                 weight: weight.value.trim(),
                 condition: condition.value.trim(),
@@ -204,6 +208,25 @@ const CreatePOD = ({ history, item, makeToast, onAdd, onUpdate }) => {
                         <Form.Control.Feedback type="invalid">
                             Please enter a date
                         </Form.Control.Feedback>
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row}>
+                    <Form.Label column sm="2">
+                        Port *
+                    </Form.Label>
+                    <Col sm="10">
+                        <InputGroup hasValidation>
+                            <Form.Control
+                                id="location"
+                                type="text"
+                                required
+                                isInvalid={isLocationInvalid}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                Please enter a port
+                            </Form.Control.Feedback>
+                        </InputGroup>
                     </Col>
                 </Form.Group>
 

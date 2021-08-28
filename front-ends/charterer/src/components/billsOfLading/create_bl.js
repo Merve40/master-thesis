@@ -130,7 +130,7 @@ const CreateBL = ({ item, update, makeToast }) => {
 
                 <Form.Group as={Row}>
                     <Form.Label column sm="2">
-                        Location *
+                        Port *
                     </Form.Label>
                     <Col sm="10">
                         <Form.Control id="location" type="text" />

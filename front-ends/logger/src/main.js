@@ -278,7 +278,7 @@ const MainPage = ({ web3, abiList }) => {
                 filter: { srcContract: proofsOfDelivery },
             })
             .on("data", (ev) => {
-                dispatch(finish(1));
+                console.log("triggered WARN event");
                 dispatch(
                     addEvent({
                         name: "Warn",

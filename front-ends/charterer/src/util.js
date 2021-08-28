@@ -260,7 +260,7 @@ function db(web3) {
                     hash: hash(BL.cargo.weight),
                 },
             },
-            place: {
+            port: {
                 value: BL.place,
                 hash: hash(BL.place),
             },
@@ -303,6 +303,10 @@ function db(web3) {
             time_delivery: {
                 value: POD.time_delivery,
                 hash: hash(POD.time_delivery),
+            },
+            port: {
+                value: POD.port,
+                hash: hash(POD.port),
             },
             cargo: {
                 weight: {
