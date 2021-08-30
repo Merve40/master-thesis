@@ -3,11 +3,17 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { Link, useHistory } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
+import { BsExclamationCircle } from "react-icons/bs";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import { verifyRaw, put } from "../../util";
 import { Web3Context, AbiListContext, AccountContext } from "../../App";
 
 const DetailPOD = ({ item, makeToast, onUpdate }) => {
     const [loading, setLoading] = useState(false);
+    const [warningWeight, setWarningWeight] = useState(false);
+    const [warningLaytime, setWarningLaytime] = useState(false);
+    const [warningMoisture, setWarningMoisture] = useState(false);
     const [fine, setFine] = useState("?");
 
     const web3 = useContext(Web3Context);
@@ -15,6 +21,45 @@ const DetailPOD = ({ item, makeToast, onUpdate }) => {
     const account = useContext(AccountContext);
 
     useEffect(async () => {
+        /**
+            Oracle Event
+         */
+        var oracle = new web3.eth.Contract(
+            abiList.oracle.abi,
+            abiList.oracle.address
+        );
+
+        var oracleListener = (event) => {
+            var warning = event.returnValues.warning;
+            if (warning == "GrainMissing") {
+                setWarningWeight(true);
+            } else if (warning == "MaxMoistureLevelExceeded") {
+                setWarningMoisture(true);
+            } else if (warning == "MaxDelayExceeded") {
+                setWarningLaytime(true);
+            }
+        };
+
+        var oracleLogs = await oracle.getPastEvents("Warn", {
+            fromBlock: 0,
+            filter: {
+                srcContract: [item.contract_address],
+            },
+        });
+        oracleLogs.forEach(oracleListener);
+
+        if (oracleLogs.length == 0) {
+            //listen to events
+            oracle.events
+                .Warn({
+                    filter: { srcContract: [item.contract_address] },
+                })
+                .on("data", oracleListener);
+        }
+
+        /**
+            ProofOfDelivery Event
+         */
         var contract = new web3.eth.Contract(
             abiList.proofOfDelivery.abi,
             item.contract_address
@@ -41,6 +86,11 @@ const DetailPOD = ({ item, makeToast, onUpdate }) => {
         }
 
         return () => {
+            oracle.events
+                .Warn({
+                    filter: { srcContract: [item.contract_address] },
+                })
+                .off("data", oracleListener);
             contract.events.BatchQueryCompleted().off("data", listener);
         };
     }, [fine]);
@@ -81,6 +131,19 @@ const DetailPOD = ({ item, makeToast, onUpdate }) => {
             status: "closed",
         });
         setLoading(false);
+    }
+
+    function showWarning(description) {
+        return (
+            <OverlayTrigger
+                trigger="hover"
+                key="right"
+                placement="right"
+                overlay={<Tooltip id={`tooltip-right`}>{description}</Tooltip>}
+            >
+                <BsExclamationCircle class="ml-2" size="1.3em" color="red" />
+            </OverlayTrigger>
+        );
     }
 
     return (
@@ -125,20 +188,37 @@ const DetailPOD = ({ item, makeToast, onUpdate }) => {
                         <td style={{ color: "gray" }}>
                             {new Date(
                                 parseInt(item.time_delivery.value)
-                            ).toLocaleString()}
+                            ).toLocaleString()}{" "}
+                            {warningLaytime
+                                ? showWarning("Delayed delivery")
+                                : null}
                         </td>
                     </tr>
                     <tr>
                         <td>Cargo Weight</td>
-                        <td>{item.cargo.weight.value} tons</td>
+                        <td>
+                            {item.cargo.weight.value} tons{" "}
+                            {warningWeight
+                                ? showWarning("Missing quantity")
+                                : null}
+                        </td>
                     </tr>
                     <tr>
                         <td>Moisture Level</td>
-                        <td>{item.cargo.moisture_level.value} %</td>
+                        <td>
+                            {item.cargo.moisture_level.value} %{" "}
+                            {warningMoisture
+                                ? showWarning("High moisture level")
+                                : null}
+                        </td>
                     </tr>
                     <tr>
                         <td>Cargo Condition</td>
                         <td>{item.cargo.condition.value}</td>
+                    </tr>
+                    <tr>
+                        <td>Fine</td>
+                        <td>{fine}</td>
                     </tr>
                     <tr>
                         <td className="col-4">Signature</td>
@@ -153,10 +233,6 @@ const DetailPOD = ({ item, makeToast, onUpdate }) => {
                                 {item.signature}
                             </div>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>Fine</td>
-                        <td>{fine}</td>
                     </tr>
                     <tr>
                         <td></td>
