@@ -2,7 +2,7 @@ import React from "react";
 import ProofOfDelivery from "./item_pod";
 import Container from "react-bootstrap/Container";
 
-const ListPOD = ({ collection, makeToast }) => {
+const ListPOD = ({ collection, makeToast, onUpdate }) => {
     return (
         <Container className="mt-5">
             <p className="h5">Proof of Deliveries:</p>
@@ -13,6 +13,7 @@ const ListPOD = ({ collection, makeToast }) => {
                         item={collection[index]}
                         index={index}
                         makeToast={makeToast}
+                        onUpdate={onUpdate}
                     />
                 ))
             ) : (

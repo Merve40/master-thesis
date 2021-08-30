@@ -7,6 +7,7 @@ import "./Oracle.sol";
 
 contract ProofOfDelivery is Initializable {
     using Lib for address;
+    event BatchQueryCompleted(uint256 fine);
 
     bytes32 max_moisture_level;
     bytes32 laytime;
@@ -28,7 +29,7 @@ contract ProofOfDelivery is Initializable {
 
     bool private hasChecked = false;
 
-    modifier isOwner {
+    modifier isOwner() {
         require(msg.sender == owner, "You are not the owner");
         _;
     }
@@ -40,7 +41,7 @@ contract ProofOfDelivery is Initializable {
         bytes32 _cargo_quantity,
         bytes32 _cargo_moisture_level,
         bytes32 _time_delivery
-    ) public initializer() {
+    ) public initializer {
         address addr = _bol.callAddress("consignee_addr()");
         require(
             msg.sender == addr,
@@ -82,20 +83,15 @@ contract ProofOfDelivery is Initializable {
 
     function submitSignature(bytes memory _signature) public isOwner {
         require(hasChecked, "Checks have not been performed yet!");
-        //BillOfLading2 bol = BillOfLading2(billOfLading);
         address shipowner = charterparty.callAddress("shipowner()");
         if (address(msg.sender).verify(address(this), _signature)) {
             signature = _signature;
             oracle.signatureEvent("proofOfDelivery", msg.sender, signature);
-            payable(msg.sender).transfer(
-                //bol.charterparty().shipowner().paymentFee()
-                shipowner.callUint256("paymentFee()")
-            );
+            payable(msg.sender).transfer(shipowner.callUint256("paymentFee()"));
 
             //transfer deposit back to shipowner
             uint256 balance = address(this).balance;
             if (balance > 0) {
-                //bol.charterparty().shipowner().transferFunds{value: balance}();
                 shipowner.callPayableVoid("transferFunds()", balance);
             }
         } else {
@@ -107,20 +103,20 @@ contract ProofOfDelivery is Initializable {
         int256[] calldata mapInt,
         bytes32[] calldata mapBytes32
     ) external {
+        require(!hasChecked, "Checks have already been performed!");
         if (mapInt.length != 7) {
             revert("invalid parameters");
         }
 
-        bytes32[7] memory checks =
-            [
-                cargo_moisture_level,
-                max_moisture_level,
-                laytime,
-                time_loaded,
-                time_delivery,
-                loaded_quantity,
-                cargo_quantity
-            ];
+        bytes32[7] memory checks = [
+            cargo_moisture_level,
+            max_moisture_level,
+            laytime,
+            time_loaded,
+            time_delivery,
+            loaded_quantity,
+            cargo_quantity
+        ];
 
         int256 maxMoistureLevel = 0;
         int256 actualMoistureLevel = 0;
@@ -156,28 +152,31 @@ contract ProofOfDelivery is Initializable {
         address charterer = charterparty.callAddress("charterer()");
         uint256 fineFee = charterparty.callUint256("fineFee()");
 
+        uint256 paidFine = 0;
+
         if (cargo_moisture_level != max_moisture_level) {
-            //checkMoistureLevel(maxMoistureLevel, actualMoistureLevel);
             if (actualMoistureLevel > maxMoistureLevel) {
                 charterer.callPayableVoid("transferFunds()", fineFee);
                 oracle.warn("MaxMoistureLevelExceeded");
+                paidFine = paidFine + fineFee;
             }
         }
 
         if (cargo_quantity != loaded_quantity) {
-            //checkQuantity(expectedQuantity, actualQuantity);
             if (actualQuantity < expectedQuantity) {
                 charterer.callPayableVoid("transferFunds()", fineFee);
-                oracle.warn("QuantityMissing");
+                oracle.warn("GrainMissing");
+                paidFine = paidFine + fineFee;
             }
         }
 
-        //checkDelay(timeLoaded, timeDelivered, laytime);
         if ((timeDelivered - timeLoaded) > laytime) {
             charterer.callPayableVoid("transferFunds()", fineFee);
             oracle.warn("MaxDelayExceeded");
+            paidFine = paidFine + fineFee;
         }
         hasChecked = true;
+        emit BatchQueryCompleted(paidFine);
     }
 
     function deposit() public payable {

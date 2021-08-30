@@ -281,7 +281,7 @@ const MainPage = ({ web3, abiList }) => {
                 console.log("triggered WARN event");
                 dispatch(
                     addEvent({
-                        name: "Warn",
+                        name: `Warn:${ev.returnValues.warning}`,
                         contract: "ProofOfDelivery",
                         address: ev.returnValues.srcContract,
                         timestamp: Date.now(),

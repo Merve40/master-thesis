@@ -58,8 +58,8 @@ const CreateBL = ({ item, update, makeToast }) => {
             BL.agent = user;
             BL.consignee = consignee;
 
-            BL.cargo.moisture_level = moistureLevel;
-            BL.cargo.weight = cargoWeight;
+            BL.cargo.moisture_level = parseInt(moistureLevel);
+            BL.cargo.weight = parseInt(cargoWeight);
             BL.place = location;
 
             var newBL = await deployer.deployBillOfLading(

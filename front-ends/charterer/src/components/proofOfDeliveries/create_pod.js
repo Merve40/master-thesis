@@ -65,27 +65,20 @@ const CreatePOD = ({ history, item, makeToast, onAdd, onUpdate }) => {
             time_delivery: Date.parse(`${date.value} ${time.value}`),
             port: location.value,
             cargo: {
-                weight: weight.value.trim(),
+                weight: parseInt(weight.value.trim()),
                 condition: condition.value.trim(),
-                moisture_level: moisture_level.value.trim(),
+                moisture_level: parseInt(moisture_level.value.trim()),
             },
             signature: "null",
         };
 
         try {
             var proofOfDelivery = await deployer.deployProofOfDelivery(obj);
-            var signature = generateSignature(proofOfDelivery.contract_address);
             // update state of BL
             item.issued = true;
             await put(`/billOfLading/${item._id}`, { issued: true });
             onUpdate({ ...item });
-            //update proofOfDelivery list
-            await put(`/proofOfDelivery/${proofOfDelivery._id}`, { signature });
             onAdd();
-
-            //update order status
-            put(`/order/billOfLading/${item._id}`, { status: "closed" });
-
             history.push("/proofOfDeliveries");
         } catch (error) {
             console.error(error);
@@ -108,14 +101,6 @@ const CreatePOD = ({ history, item, makeToast, onAdd, onUpdate }) => {
         }
 
         return isComplete;
-    }
-
-    function generateSignature(contractAddress) {
-        const hash = web3.utils.soliditySha3({
-            v: contractAddress,
-            t: "address",
-        });
-        return account.sign(hash).signature;
     }
 
     return (

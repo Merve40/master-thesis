@@ -1,7 +1,9 @@
 const mongo = require("mongodb").MongoClient;
+const ObjectID = require("mongodb").ObjectID;
 const fetch = require("node-fetch");
 const Resolver = require("did-resolver").Resolver;
 const getResolver = require("ethr-did-resolver").getResolver;
+const jp = require("jsonpath");
 
 module.exports = async function (
     env,
@@ -12,7 +14,7 @@ module.exports = async function (
     logger,
     sseClients = {}
 ) {
-    const gas = 4000000;
+    const gas = 8000000;
     const role = env.role; // e.g. charterer, shipowner, supplier, etc.
 
     const config = {
@@ -155,9 +157,12 @@ module.exports = async function (
                 .map((c) => c.contract_address)
                 .toArray();
 
-            logger.debug("fetched unchecked proof-of-deliveries %o", contracts);
+            logger.debug(
+                "fetched unchecked proof-of-deliveries %o",
+                queryContracts
+            );
 
-            updateBatchQueryEventListener();
+            await updateBatchQueryEventListener();
         } catch (error) {
             logger.error(error);
         } finally {
@@ -165,13 +170,25 @@ module.exports = async function (
         }
     }
 
-    function updateBatchQueryEventListener() {
+    async function updateBatchQueryEventListener() {
         if (queryEvent) {
             // un-subscribes from existing event
             queryEvent.off("data", batchQueryEvent);
         }
 
         if (queryContracts.length > 0) {
+            //TODO: use oracle.getPastEvents() instead!
+            var logs = await oracle.getPastEvents();
+            var events = logs.filter((l) =>
+                l.event == "BatchQuery" && l.returnValues.srcContract
+                    ? queryContracts.includes(l.returnValues.srcContract)
+                    : false
+            );
+            events.forEach((ev) => {
+                batchQueryEvent(ev);
+            });
+
+            /*
             queryEvent = oracle.events
                 .BatchQuery({
                     filter: {
@@ -179,10 +196,12 @@ module.exports = async function (
                     },
                 })
                 .on("data", batchQueryEvent);
+                */
         }
     }
 
     async function batchQueryEvent(event) {
+        logger.debug("event: BatchQuery %o", event.returnValues);
         var address = event.returnValues.srcContract;
         var handle = event.returnValues.handle;
         var hashes = event.returnValues.values;
@@ -195,61 +214,66 @@ module.exports = async function (
             var pod = await client
                 .db(env.role)
                 .collection("proofOfDeliveries")
-                .findOne({ address });
+                .findOne({ contract_address: address });
 
             var bl = await client
                 .db(env.role)
                 .collection("billOfLadings")
-                .findOne(pod.billOfLading);
+                .findOne(new ObjectID(pod.billOfLading));
 
             var cp = await client
                 .db(env.role)
                 .collection("charterparties")
-                .findOne(bl.charterparty);
+                .findOne(new ObjectID(bl.charterparty));
 
-            var pairs = jp.query(pod, "$..[?(@.hash)]");
-            pairs.concat(jp.query(bl, "$..[?(@.hash)]"));
-            pairs.concat(jp.query(cp, "$..[?(@.hash)]"));
+            var numbers = [
+                cp.max_moisture_level.value,
+                pod.cargo.moisture_level.value,
+                cp.laytime.value,
+                bl.date.value,
+                pod.time_delivery.value,
+                bl.cargo.weight.value,
+                pod.cargo.weight.value,
+            ];
 
-            var matches = pairs
-                .filter((p) => hashes.includes(p.hash))
-                .map((p) => p.value);
+            var tx = await oracle.methods
+                .submitBatchQuery(handle, numbers, [])
+                .send({ from: account.address, gas })
+                .on("error", async (e) => {
+                    logger.error("BatchQuery failed: %o", e);
+                    if (client) {
+                        await client.close();
+                    }
+                })
+                .on("receipt", async (r) => {
+                    //sending logs
+                    notify({
+                        name: "batchQuery",
+                        body: `> query for: ${JSON.stringify(
+                            hashes
+                        )}\n> response data: ${JSON.stringify([...numbers])}`,
+                    });
 
-            var numbers = matches.filter((m) => typeof m === "number");
-            var bytes32 = matches
-                .filter((m) => typeof m === "string")
-                .map((m) => web3.utils.asciiToHex(m));
+                    var update = {};
+                    update["$set"] = { checked: true };
+                    var updated = await client
+                        .db(env.role)
+                        .collection("proofOfDeliveries")
+                        .updateOne({ contract_address: address }, update);
 
-            await oracle.methods
-                .submitBatchQuery(handle, numbers, bytes32)
-                .send({ gas });
+                    logger.debug("update %o", update);
 
-            //sending logs
-            var strings = matches.filter((m) => typeof m === "string");
-            notify({
-                name: "batchQuery",
-                body: `> query for: ${JSON.stringify(
-                    hashes
-                )}\n> response data: ${JSON.stringify([
-                    ...numbers,
-                    ...strings,
-                ])}`,
-            });
+                    queryContracts = queryContracts.filter(
+                        (c) => c !== address
+                    );
+                    updateBatchQueryEventListener();
 
-            var update = {};
-            update["$set"] = { checked: true };
-            var updated = await client
-                .db(env.role)
-                .collection("proofOfDeliveries")
-                .updateOne({ contract_address: address }, update);
-
-            logger.debug("update %o", update);
-
-            queryContracts = queryContracts.filter((c) => c !== address);
-            updateBatchQueryEventListener();
+                    if (client) {
+                        await client.close();
+                    }
+                });
         } catch (error) {
             logger.error(error);
-        } finally {
             if (client) {
                 await client.close();
             }
@@ -261,6 +285,23 @@ module.exports = async function (
             sseClients[c].write(`data: ${JSON.stringify(notification)}\n\n`);
         }
     }
+
+    async function initDbEvents() {
+        var client = await mongo.connect(env.dbUri, {
+            useUnifiedTopology: true,
+        });
+        var stream2 = client
+            .db(env.role)
+            .collection("proofOfDeliveries")
+            .watch([{ $match: { operationType: "insert" } }]);
+
+        stream2.on("change", async (next) => {
+            //var doc = next.fullDocument;
+            initializeBatchQueryEventListener();
+        });
+    }
+
+    initDbEvents();
 
     /**************************************************************************
      ***************************** REST API ***********************************

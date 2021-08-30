@@ -360,15 +360,17 @@ async function initEvents() {
             });
 
         stream2.on("change", async (next) => {
-            if ("deposited" in next.updateDescription.updatedFields) {
-                var event = "deposit_billOfLading";
+            if (next.updateDescription) {
+                if ("deposited" in next.updateDescription.updatedFields) {
+                    var event = "deposit_billOfLading";
 
-                for (var client in sseClients) {
-                    sseClients[client].write(
-                        `event: ${event}\ndata: ${JSON.stringify(
-                            next.fullDocument
-                        )}\n\n`
-                    );
+                    for (var client in sseClients) {
+                        sseClients[client].write(
+                            `event: ${event}\ndata: ${JSON.stringify(
+                                next.fullDocument
+                            )}\n\n`
+                        );
+                    }
                 }
             }
         });

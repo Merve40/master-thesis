@@ -1,28 +1,86 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { Link, useHistory } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
-import { verifyRaw } from "../../util";
-import { Web3Context, AbiListContext } from "../../App";
+import { verifyRaw, put } from "../../util";
+import { Web3Context, AbiListContext, AccountContext } from "../../App";
 
-const DetailPOD = ({ item, makeToast }) => {
+const DetailPOD = ({ item, makeToast, onUpdate }) => {
     const [loading, setLoading] = useState(false);
+    const [fine, setFine] = useState("?");
+
     const web3 = useContext(Web3Context);
     const abiList = useContext(AbiListContext);
+    const account = useContext(AccountContext);
 
-    async function onClickValidate() {
+    useEffect(async () => {
+        var contract = new web3.eth.Contract(
+            abiList.proofOfDelivery.abi,
+            item.contract_address
+        );
+
+        var listener = (event) => {
+            var f = event.returnValues.fine;
+            setFine(f);
+        };
+
+        //1 - check past events
+        var logs = await contract.getPastEvents("allEvents", { fromBlock: 0 });
+        console.log("logs", logs);
+        if (logs.length == 1) {
+            var f = logs[0].returnValues.fine;
+            setFine(f);
+            item.checked = true;
+            onUpdate({ ...item });
+        } else {
+            //2 - listen for event
+            contract.events.BatchQueryCompleted().on("data", listener);
+            item.checked = true;
+            onUpdate({ ...item });
+        }
+
+        return () => {
+            contract.events.BatchQueryCompleted().off("data", listener);
+        };
+    }, [fine]);
+
+    function generateSignature(contractAddress) {
+        const hash = web3.utils.soliditySha3({
+            v: contractAddress,
+            t: "address",
+        });
+        return account.sign(hash).signature;
+    }
+
+    async function sign() {
         setLoading(true);
         var contract = new web3.eth.Contract(
             abiList.proofOfDelivery.abi,
             item.contract_address
         );
-        var root = await contract.methods.merkleroot();
-        var verified = verifyRaw(root, item);
-        setLoading(false);
+        var sig = generateSignature(item.contract_address);
 
-        var result = verified ? "Contract is valid" : "Contract is not valid";
-        makeToast("Proof of Delivery", result);
+        var tx = await contract.methods
+            .submitSignature(sig)
+            .send({ from: account.address, gas: 8000000 });
+
+        item.signature = sig;
+        item.checked = true;
+
+        onUpdate({ ...item });
+
+        //update proofOfDelivery list
+        await put(`/proofOfDelivery/${item._id}`, {
+            signature: sig,
+            checked: true,
+        });
+
+        //update order status
+        put(`/order/billOfLading/${item.billOfLading._id}`, {
+            status: "closed",
+        });
+        setLoading(false);
     }
 
     return (
@@ -93,6 +151,32 @@ const DetailPOD = ({ item, makeToast }) => {
                                 }}
                             >
                                 {item.signature}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fine</td>
+                        <td>{fine}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div style={{ float: "right" }}>
+                                {item.checked && item.signature == "null" ? (
+                                    <Button
+                                        variant="outline-dark"
+                                        onClick={sign}
+                                    >
+                                        {loading ? (
+                                            <Spinner
+                                                className="mr-2"
+                                                animation="border"
+                                                size="sm"
+                                            />
+                                        ) : null}
+                                        Sign contract
+                                    </Button>
+                                ) : null}
                             </div>
                         </td>
                     </tr>

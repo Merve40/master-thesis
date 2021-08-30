@@ -54,6 +54,12 @@ const Main = ({ makeToast, sse }) => {
         );
     }
 
+    function onUpdateProofOfDeliveries(item) {
+        setProofOfDeliveries(
+            proofOfDeliveries.map((i) => (i._id == item._id ? item : i))
+        );
+    }
+
     return (
         <>
             <Route
@@ -107,6 +113,7 @@ const Main = ({ makeToast, sse }) => {
                     <ListPOD
                         collection={proofOfDeliveries}
                         makeToast={makeToast}
+                        onUpdate={onUpdateProofOfDeliveries}
                     />
                 )}
             />

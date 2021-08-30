@@ -113,10 +113,12 @@ try {
                 fullDocument: "updateLookup",
             });
         stream.on("change", async (next) => {
-            var update = next.updateDescription.updatedFields;
-            if ("contract_address" in update) {
-                core.addContract(update.contract_address);
-                core.updateOnContractSignedEventListener();
+            if (next.updateDescription) {
+                var update = next.updateDescription.updatedFields;
+                if ("contract_address" in update) {
+                    core.addContract(update.contract_address);
+                    core.updateOnContractSignedEventListener();
+                }
             }
         });
 
@@ -144,7 +146,12 @@ try {
             fullDocument: "updateLookup",
         });
         stream3.on("change", async (next) => {
+            if (!next.updateDescription) {
+                return;
+            }
+
             var update = next.updateDescription.updatedFields;
+
             if ("status" in update) {
                 var doc = next.fullDocument;
                 logger.debug(`document change with id ${doc._id}`);
