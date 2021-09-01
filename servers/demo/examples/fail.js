@@ -21,8 +21,8 @@ const master = {
     account: web3.eth.accounts.privateKeyToAccount("0x" + env.master_key),
 };
 
-const broker_charterer = "http://192.168.178.24:8787";
-const broker_shipowner = "http://192.168.178.24:9797";
+const broker_charterer = `http://${IP}:8787`;
+const broker_shipowner = `http://${IP}:9797`;
 
 async function issueBL(charterparty) {
     console.log("1 - issueBL");

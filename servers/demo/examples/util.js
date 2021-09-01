@@ -2,6 +2,9 @@ const mongo = require("mongodb").MongoClient;
 const fetch = require("node-fetch");
 const Web3 = require("web3");
 const jp = require("jsonpath");
+const os = require("os");
+const IP = os.networkInterfaces()["wlp2s0"][0].address;
+
 const MerkleTree = require("merkletreejs").MerkleTree;
 const keccak256 = require("keccak256").keccak256;
 
@@ -24,7 +27,7 @@ const env = require("../env");
 const gas = 5000000;
 const web3 = new Web3(env.ethereumUri);
 
-const broker = "http://192.168.178.24:8787";
+const broker = `http://${IP}:8787`;
 const abiList = env.contracts;
 
 async function Deployer(account) {

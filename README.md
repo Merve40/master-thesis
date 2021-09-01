@@ -79,7 +79,24 @@ Ganache will be available under `ws://0.0.0.0:8545`
 
 ---
 
-### **Running the Project** (locally)
+## **Configuring the Project**
+
+_Current project uses the network interface `wlp2s0`, adjust interface name in files `servers/demo/init.js`, `servers/demo/examples/fail.js` and `servers/demo/examples/util.js` if necessary._
+
+**1.** Get the network IP-address
+
+```
+# ifconfig
+```
+
+**2.** Change the IPs of environment variables (`.env`) in `front-ends`
+
+<pre>
+REACT_APP_WEB3=ws://<b>192.168.178.24</b>:8545
+REACT_APP_BROKER=http://<b>192.168.178.24</b>:8787
+</pre>
+
+### **Running the Project** (in local network)
 
 **1.** Install packages. Run `install.sh` script in root folder
 
