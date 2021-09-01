@@ -41,15 +41,6 @@ function DetailBL({ history, element, index, makeToast, onUpdate }) {
             });
     }, []);
 
-    async function onClickValidate() {
-        setLoading(true);
-        // get merkleroot
-        const root = await contract.methods.merkleroot();
-        const verified = verifyRaw(root, item);
-        makeToast("Bill of Lading", `Verified merkleroot`);
-        setLoading(false);
-    }
-
     async function onClickSignContract() {
         try {
             var hash = web3.utils.soliditySha3(item.contract_address);
@@ -70,29 +61,6 @@ function DetailBL({ history, element, index, makeToast, onUpdate }) {
         } catch (err) {
             console.log(err.message);
             setError(err.message);
-        }
-    }
-
-    function getValidateButton() {
-        if (item.deposited) {
-            return (
-                <Button
-                    className="mr-1"
-                    variant="outline-dark"
-                    onClick={onClickValidate}
-                >
-                    {loading ? (
-                        <Spinner
-                            className="mr-2"
-                            animation="border"
-                            size="sm"
-                        />
-                    ) : null}
-                    Validate contract
-                </Button>
-            );
-        } else {
-            return null;
         }
     }
 
@@ -254,9 +222,6 @@ function DetailBL({ history, element, index, makeToast, onUpdate }) {
                         <td></td>
                         <td>
                             <div style={{ float: "right" }}>
-                                {
-                                    //getValidateButton()
-                                }
                                 {initConsignee()}
                                 {initSigner()}
                             </div>

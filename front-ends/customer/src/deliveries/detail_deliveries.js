@@ -24,30 +24,37 @@ const DetailDelivery = ({ item, onUpdate }) => {
             name: "Query merkleroot of BillOfLading and ProofOfDelivery",
             payload: "",
             finished: false,
+            success: true,
         },
         {
             name: "Resolve DID-document for BillOfLading & get oracle servce-endpoint",
             finished: false,
+            success: true,
         },
         {
             name: "GET /proofs/:merkleroot",
             finished: false,
+            success: true,
         },
         {
             name: "Verify merkletree of BillOfLading",
             finished: false,
+            success: true,
         },
         {
             name: "Resolve DID-document for ProofOfDelivery & get oracle servce-endpoint",
             finished: false,
+            success: true,
         },
         {
             name: "GET /proofs/:merkleroot",
             finished: false,
+            success: true,
         },
         {
             name: "Verify merkletree of ProofOfDelivery",
             finished: false,
+            success: true,
         },
     ]);
 
@@ -86,7 +93,7 @@ const DetailDelivery = ({ item, onUpdate }) => {
             item.loading_port,
             item.loading_time,
         ]);
-        nextStep();
+        nextStep({ success: result });
 
         var setter2 = events[1].returnValues.setter;
         var merkleroot2 = events[1].returnValues.merkleroot;
@@ -98,7 +105,7 @@ const DetailDelivery = ({ item, onUpdate }) => {
             item.discharging_time,
             item.discharging_port,
         ]);
-        nextStep();
+        nextStep({ success: result2 });
 
         if (result && result2) {
             item.verified = true;
@@ -133,6 +140,9 @@ const DetailDelivery = ({ item, onUpdate }) => {
         }
         if ("payload" in obj) {
             step.payload = obj.payload;
+        }
+        if ("success" in obj) {
+            step.success = obj.success;
         }
         step.finished = true;
 

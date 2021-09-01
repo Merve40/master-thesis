@@ -21,7 +21,9 @@ const Stepper = ({ steps = [] }) => {
                                 lineHeight: "30px",
                                 borderRadius: "50%",
                                 backgroundColor: s.finished
-                                    ? "limegreen"
+                                    ? s.success
+                                        ? "limegreen"
+                                        : "red"
                                     : "lightgray",
                                 color: s.finished ? "honeydew" : "gray",
                                 display: "inline-block",
