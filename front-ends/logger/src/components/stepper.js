@@ -7,16 +7,52 @@ const Stepper = ({ steps }) => {
         return (
             <>
                 <Grid.Col>
-                    <div style={{ textAlign: "center" }}>
+                    <div
+                        style={{
+                            textAlign: "center",
+                        }}
+                    >
                         <Avatar
-                            color={s.finished ? "green" : "gray"}
+                            color={
+                                s.current
+                                    ? "blue"
+                                    : s.finished
+                                    ? "green"
+                                    : "gray"
+                            }
                             style={{
-                                color: s.finished ? "black" : "gray",
+                                color: s.current
+                                    ? "DodgerBlue"
+                                    : s.finished
+                                    ? "black"
+                                    : "gray",
                                 fontWeight: "normal",
+                                borderStyle: "solid",
+                                borderWidth: s.current ? "1.5px" : "0px",
+                                borderColor: "DodgerBlue",
                             }}
                         >
                             {idx + 1}
                         </Avatar>
+                        {s.error ? (
+                            <div
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                title="Errors"
+                            >
+                                <div
+                                    class="badge badge-pill bg-red"
+                                    style={{
+                                        zIndex: 5000,
+                                        position: "absolute",
+                                        left: "4em",
+                                        top: 0,
+                                    }}
+                                >
+                                    {s.numError}
+                                </div>
+                            </div>
+                        ) : null}
                         <br />
                         {s.name}
                     </div>

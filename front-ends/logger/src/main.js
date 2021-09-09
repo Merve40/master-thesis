@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { add } from "./storage/contracts-slice";
 import { addEvent } from "./storage/events-slice";
-import { finish } from "./storage/steps-slice";
+import { finish, addError } from "./storage/steps-slice";
 import { addServerEvent, toggle } from "./storage/server-events-slice";
 
 import ContractsTable from "./components/contracts-table";
@@ -72,7 +72,7 @@ const MainPage = ({ web3, abiList }) => {
     }, [contracts]);
 
     function initContractEvents(oracle) {
-        if (steps[6].finished) {
+        if (contracts.length == 3) {
             step2(oracle);
         } else if (steps[2].finished) {
             step1(oracle);
@@ -246,6 +246,7 @@ const MainPage = ({ web3, abiList }) => {
                 filter: { _contract: proofsOfDelivery },
             })
             .once("data", (ev) => {
+                dispatch(finish(6));
                 dispatch(
                     addEvent({
                         name: "SignedContract",
@@ -279,6 +280,7 @@ const MainPage = ({ web3, abiList }) => {
             })
             .on("data", (ev) => {
                 console.log("triggered WARN event");
+                dispatch(addError(6));
                 dispatch(
                     addEvent({
                         name: `Warn:${ev.returnValues.warning}`,
@@ -323,7 +325,7 @@ const MainPage = ({ web3, abiList }) => {
         var e3 = oracle.events.CreatedProofOfDelivery({ fromBlock: "latest" });
         oracleEvents.push(e3);
         e3.once("data", (e) => {
-            dispatch(finish(6));
+            //dispatch(finish(6));
             dispatch(
                 add({
                     name: "ProofOfDelivery",
@@ -411,10 +413,12 @@ const MainPage = ({ web3, abiList }) => {
         <div style={{ marginTop: "3em" }}>
             <Page>
                 <Page.Main>
-                    <AsCard
-                        title="Order Progress"
-                        node={<Stepper steps={steps} />}
-                    />
+                    <div class="sticky-top">
+                        <AsCard
+                            title="Order Progress"
+                            node={<Stepper steps={steps} />}
+                        />
+                    </div>
 
                     <AsCard
                         title="Deployed Contracts"
