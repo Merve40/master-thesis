@@ -162,7 +162,7 @@ async function issuePoD(charterparty, billOfLading) {
         cargo: {
             weight: 180,
             condition: "OK",
-            moisture_level: 14,
+            moisture_level: 17,
         },
         signature: "null",
     };
@@ -251,26 +251,31 @@ async function run() {
     await signBL(billOfLading);
     var proofOfDelivery = await issuePoD(charterparty, billOfLading);
 
-    //manipulate PoD
-    await tryWith(
-        async (client) =>
-            await client
-                .db("charterer")
-                .collection("proofOfDeliveries")
-                .updateOne(
-                    { _id: new ObjectID(proofOfDelivery._id) },
-                    {
-                        $set: {
-                            "cargo.weight.value": 200,
-                        },
-                    }
-                )
+    var contract = new web3.eth.Contract(
+        abiList.proofOfDelivery.abi,
+        proofOfDelivery.contract_address
     );
 
-    setTimeout(async () => {
+    contract.events.BatchQueryCompleted().on("data", async (e) => {
+        //manipulate PoD
+        await tryWith(
+            async (client) =>
+                await client
+                    .db("charterer")
+                    .collection("proofOfDeliveries")
+                    .updateOne(
+                        { _id: new ObjectID(proofOfDelivery._id) },
+                        {
+                            $set: {
+                                "cargo.weight.value": 200,
+                                "cargo.moisture_level.value": 15,
+                            },
+                        }
+                    )
+        );
         await signPoD(proofOfDelivery);
         process.exit(1);
-    }, 5000);
+    });
 }
 
 run();

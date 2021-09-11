@@ -131,22 +131,24 @@ export default function DetailCharterparty({ makeToast, element, onUpdate }) {
                     </tr>
                     <tr>
                         <td></td>
-                        <td className="" style={{ float: "right" }}>
+                        <td>
                             {item.contract_address != "null" &&
                             item.shipowner.signature == "null" ? (
-                                <Button
-                                    variant="outline-dark"
-                                    onClick={onClickSign}
-                                >
-                                    {loading ? (
-                                        <Spinner
-                                            className="mr-2"
-                                            animation="border"
-                                            size="sm"
-                                        />
-                                    ) : null}
-                                    Sign contract
-                                </Button>
+                                <div style={{ float: "right" }}>
+                                    <Button
+                                        variant="outline-dark"
+                                        onClick={onClickSign}
+                                    >
+                                        {loading ? (
+                                            <Spinner
+                                                className="mr-2"
+                                                animation="border"
+                                                size="sm"
+                                            />
+                                        ) : null}
+                                        Sign contract
+                                    </Button>
+                                </div>
                             ) : null}
                         </td>
                     </tr>

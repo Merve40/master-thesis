@@ -21,13 +21,18 @@ const MyDropdown = ({ currentItem, list, action }) => {
     // forwardRef again here!
     // Dropdown needs access to the DOM of the Menu to measure it
     const CustomMenu = forwardRef(
-        ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
-            //console.log(children[0]);
+        (
+            { children, style, show, className, "aria-labelledby": labeledBy },
+            ref
+        ) => {
             return (
                 <div
+                    id="custom-menu"
                     ref={ref}
-                    style={style}
                     className={className}
+                    style={{
+                        ...style,
+                    }}
                     aria-labelledby={labeledBy}
                 >
                     <ul className="list-unstyled">
@@ -53,9 +58,11 @@ const MyDropdown = ({ currentItem, list, action }) => {
                 {current}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu as={CustomMenu}>
+            <Dropdown.Menu className="dropdown-menu-right" as={CustomMenu}>
                 {list.map((i, idx) => (
-                    <Dropdown.Item eventKey={idx}>{i}</Dropdown.Item>
+                    <Dropdown.Item key={idx} eventKey={idx}>
+                        {i}
+                    </Dropdown.Item>
                 ))}
             </Dropdown.Menu>
         </Dropdown>

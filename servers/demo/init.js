@@ -12,6 +12,9 @@ const accounts = require("../data/accounts.json");
 const charterparties = require("../data/charterparties.json");
 const registry = require("../data/registry.json");
 const orders = require("../data/orders.json");
+const billsOfLading = require("../data/billOfLadings.json");
+const proofOfDeliveries = require("../data/proofOfDeliveries.json");
+const deliveries = require("../data/deliveries.json");
 const jp = require("jsonpath");
 
 const env = require("./env");
@@ -79,6 +82,11 @@ async function step5(envs) {
     });
 
     await client.db(envCustomer.role).collection("deliveries").deleteMany();
+    await client
+        .db(envCustomer.role)
+        .collection("deliveries")
+        .insertMany(deliveries);
+
     await client.db(envShipowner.role).collection("credentials").deleteMany();
 
     await client.db(envCharterer.role).collection("registry").deleteMany();
@@ -140,8 +148,33 @@ async function step5(envs) {
         .collection("charterparties")
         .insertMany(charterparties);
 
+    // 2 - create B/L list
+    for (var bl of billsOfLading) {
+        bl._id = new ObjectID(bl._id["$oid"]);
+        bl.charterparty = new ObjectID(bl.charterparty["$oid"]);
+        bl.consignee = new ObjectID(bl.consignee["$oid"]);
+        bl.notify_party.id = new ObjectID(bl.notify_party.id["$oid"]);
+        bl.signer.id = new ObjectID(bl.signer.id["$oid"]);
+    }
+
     await client.db(envCharterer.role).collection("billOfLadings").deleteMany();
     await client.db(envShipowner.role).collection("billOfLadings").deleteMany();
+    await client
+        .db(envCharterer.role)
+        .collection("billOfLadings")
+        .insertMany(billsOfLading);
+    await client
+        .db(envShipowner.role)
+        .collection("billOfLadings")
+        .insertMany(billsOfLading);
+
+    // 2- create PoD list
+    for (var pod of proofOfDeliveries) {
+        pod._id = new ObjectID(pod._id["$oid"]);
+        pod.billOfLading = new ObjectID(pod.billOfLading["$oid"]);
+        pod.consignee = new ObjectID(pod.consignee["$oid"]);
+        pod.shipowner = new ObjectID(pod.shipowner["$oid"]);
+    }
 
     await client
         .db(envCharterer.role)
@@ -151,6 +184,14 @@ async function step5(envs) {
         .db(envShipowner.role)
         .collection("proofOfDeliveries")
         .deleteMany();
+    await client
+        .db(envCharterer.role)
+        .collection("proofOfDeliveries")
+        .insertMany(proofOfDeliveries);
+    await client
+        .db(envShipowner.role)
+        .collection("proofOfDeliveries")
+        .insertMany(proofOfDeliveries);
 
     await client.db(envCharterer.role).collection("orders").deleteMany();
 
@@ -159,6 +200,9 @@ async function step5(envs) {
         var order = orders[i];
         order.charterparty = new ObjectID(order.charterparty["$oid"]);
         order.buyer = new ObjectID(order.buyer["$oid"]);
+        if (order.billOfLading !== "null") {
+            order.billOfLading = new ObjectID(order.billOfLading["$oid"]);
+        }
         _orders.push(order);
     }
 

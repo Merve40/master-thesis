@@ -53,7 +53,7 @@ const MyDropdown = ({ currentItem, list, action }) => {
                 {current}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu as={CustomMenu}>
+            <Dropdown.Menu className="dropdown-menu-right" as={CustomMenu}>
                 {list.map((i, idx) => (
                     <Dropdown.Item eventKey={idx}>{i}</Dropdown.Item>
                 ))}

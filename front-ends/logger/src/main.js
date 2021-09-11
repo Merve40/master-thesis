@@ -72,7 +72,7 @@ const MainPage = ({ web3, abiList }) => {
     }, [contracts]);
 
     function initContractEvents(oracle) {
-        if (contracts.length == 3) {
+        if (steps[5].finished) {
             step2(oracle);
         } else if (steps[2].finished) {
             step1(oracle);
@@ -325,7 +325,6 @@ const MainPage = ({ web3, abiList }) => {
         var e3 = oracle.events.CreatedProofOfDelivery({ fromBlock: "latest" });
         oracleEvents.push(e3);
         e3.once("data", (e) => {
-            //dispatch(finish(6));
             dispatch(
                 add({
                     name: "ProofOfDelivery",

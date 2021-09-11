@@ -149,7 +149,7 @@ app.get("/recentBillsOfLading/:vesselId", async (req, res) => {
         var blArray = await coll
             .find(query)
             .sort("date", -1)
-            .limit(3)
+            .limit(4)
             .toArray();
 
         for (var i in blArray) {

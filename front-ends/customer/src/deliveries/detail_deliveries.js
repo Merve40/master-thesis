@@ -1,5 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { BsExclamationCircle } from "react-icons/bs";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import Spinner from "react-bootstrap/Spinner";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
@@ -18,6 +21,9 @@ const DetailDelivery = ({ item, onUpdate }) => {
     const [show, setShow] = useState(false);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [warningWeight, setWarningWeight] = useState(false);
+    const [warningLaytime, setWarningLaytime] = useState(false);
+    const [warningMoisture, setWarningMoisture] = useState(false);
 
     const [steps, setSteps] = useState([
         {
@@ -60,7 +66,48 @@ const DetailDelivery = ({ item, onUpdate }) => {
 
     var currentStep = 0;
 
-    useEffect(() => {}, [show, loading]);
+    useEffect(async () => {
+        var oracle = new web3.eth.Contract(
+            abiList.oracle.abi,
+            abiList.oracle.address
+        );
+
+        var oracleListener = (event) => {
+            var warning = event.returnValues.warning;
+            if (warning == "GrainMissing") {
+                setWarningWeight(true);
+            } else if (warning == "MaxMoistureLevelExceeded") {
+                setWarningMoisture(true);
+            } else if (warning == "MaxDelayExceeded") {
+                setWarningLaytime(true);
+            }
+        };
+
+        var oracleLogs = await oracle.getPastEvents("Warn", {
+            fromBlock: 0,
+            filter: {
+                srcContract: [item.proofOfDelivery],
+            },
+        });
+        oracleLogs.forEach(oracleListener);
+
+        if (oracleLogs.length == 0) {
+            //listen to events
+            oracle.events
+                .Warn({
+                    filter: { srcContract: [item.proofOfDelivery] },
+                })
+                .on("data", oracleListener);
+        }
+
+        return () => {
+            oracle.events
+                .Warn({
+                    filter: { srcContract: [item.proofOfDelivery] },
+                })
+                .off("data", oracleListener);
+        };
+    }, [show, loading]);
 
     async function verifyData() {
         setLoading(true);
@@ -150,6 +197,19 @@ const DetailDelivery = ({ item, onUpdate }) => {
         currentStep++;
     }
 
+    function showWarning(description) {
+        return (
+            <OverlayTrigger
+                trigger="hover"
+                key="right"
+                placement="right"
+                overlay={<Tooltip id={`tooltip-right`}>{description}</Tooltip>}
+            >
+                <BsExclamationCircle class="ml-2" size="1.3em" color="red" />
+            </OverlayTrigger>
+        );
+    }
+
     return (
         <div>
             <Table responsive>
@@ -201,7 +261,14 @@ const DetailDelivery = ({ item, onUpdate }) => {
 
                     <tr>
                         <td>Weight:</td>
-                        <td style={{ color: "gray" }}>{item.weight} tons</td>
+                        <td style={{ color: "gray" }}>
+                            {item.weight} tons{" "}
+                            {warningWeight
+                                ? showWarning(
+                                      "Detected fraud: quantity is missing"
+                                  )
+                                : null}
+                        </td>
                     </tr>
 
                     <tr>
@@ -211,7 +278,12 @@ const DetailDelivery = ({ item, onUpdate }) => {
                     <tr>
                         <td>Moisture Level:</td>
                         <td style={{ color: "gray" }}>
-                            {item.moisture_level} %
+                            {item.moisture_level} %{" "}
+                            {warningMoisture
+                                ? showWarning(
+                                      "Quality violation: moisture level is too high"
+                                  )
+                                : null}
                         </td>
                     </tr>
                     <tr>
@@ -222,40 +294,29 @@ const DetailDelivery = ({ item, onUpdate }) => {
                     </tr>
                     {!item.verified ? (
                         <tr>
-                            <td></td>
                             <td>
-                                <Row>
-                                    <Col>
-                                        {error ? (
-                                            <div
-                                                style={{
-                                                    float: "right",
-                                                }}
-                                            >
-                                                <Alert
-                                                    className="p-1"
-                                                    variant="danger"
-                                                >
-                                                    Verification failed!
-                                                </Alert>
-                                            </div>
-                                        ) : null}
-                                    </Col>
-                                    <Col>
-                                        <div
-                                            style={{
-                                                float: "right",
-                                            }}
-                                        >
-                                            <Button
-                                                variant="outline-dark"
-                                                onClick={verifyData}
-                                            >
-                                                Verify
-                                            </Button>
-                                        </div>
-                                    </Col>
-                                </Row>
+                                {error ? (
+                                    <div>
+                                        <Alert className="p-1" variant="danger">
+                                            Verification failed: provided data
+                                            is not completely correct!
+                                        </Alert>
+                                    </div>
+                                ) : null}
+                            </td>
+                            <td>
+                                <div
+                                    style={{
+                                        float: "right",
+                                    }}
+                                >
+                                    <Button
+                                        variant="outline-dark"
+                                        onClick={verifyData}
+                                    >
+                                        Verify
+                                    </Button>
+                                </div>
                             </td>
                         </tr>
                     ) : null}

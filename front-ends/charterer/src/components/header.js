@@ -98,7 +98,7 @@ const Header = ({ history, list, setUser, setAccount }) => {
     return (
         <>
             <Row
-                className="pr-3 pt-1 pb-0"
+                className="pr-3 pt-1 pb-0 m-0"
                 style={{ backgroundColor: "#f8f9fa", color: "gray" }}
             >
                 <Col>

@@ -20,6 +20,72 @@
             },
             "weight": "120 tonnes"
         },
+        "status": "closed",
+        "billOfLading": {
+            "$oid": "613b57b775e74f0ed86a6692"
+        }
+    },
+    {
+        "charterparty": { "$oid": "608ae6da7ffe5fb7f1a56e4b" },
+        "buyer": { "$oid": "6091b4528a1e6f13e37f9c52" },
+        "date": "1620164034386",
+        "cargo": {
+            "description": "Wheat, einkorn",
+            "moisture_level": "11%",
+            "nutrition": {
+                "calories": "340",
+                "protein": "13.2 grams",
+                "carbs": "72 grams",
+                "sugar": "0.4 grams",
+                "fiber": "10.7 grams",
+                "fat": "2.5 grams"
+            },
+            "weight": "210 tonnes"
+        },
+        "status": "closed",
+        "billOfLading": { "$oid": "613ceefe75e74f0ed86a6696" }
+    },
+    {
+        "charterparty": { "$oid": "608ae6da7ffe5fb7f1a56e4b" },
+        "buyer": { "$oid": "6091b4528a1e6f13e37f9c52" },
+        "date": "1631300910032",
+        "cargo": {
+            "description": "Corn, dried",
+            "moisture_level": "13%",
+            "nutrition": {
+                "calories": "386",
+                "protein": "9.9 grams",
+                "carbs": "75 grams",
+                "sugar": "5.4 grams",
+                "fiber": "10.7 grams",
+                "fat": "5.2 grams"
+            },
+            "weight": "100 tonnes"
+        },
+        "status": "closed",
+        "billOfLading": { "$oid": "613cf0e575e74f0ed86a669a" }
+    },
+    {
+        "charterparty": {
+            "$oid": "608ae6da7ffe5fb7f1a56e4b"
+        },
+        "buyer": {
+            "$oid": "6091b4528a1e6f13e37f9c52"
+        },
+        "date": "1631300910032",
+        "cargo": {
+            "description": "Corn, dried",
+            "moisture_level": "13%",
+            "nutrition": {
+                "calories": "386",
+                "protein": "9.9 grams",
+                "carbs": "75 grams",
+                "sugar": "5.4 grams",
+                "fiber": "10.7 grams",
+                "fat": "5.2 grams"
+            },
+            "weight": "250 tonnes"
+        },
         "status": "open",
         "billOfLading": "null"
     }

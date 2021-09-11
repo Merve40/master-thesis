@@ -51,6 +51,11 @@ export const stepsSlice = createSlice({
             if (index.payload + 1 < state.array.length) {
                 state.array[index.payload + 1].current = true;
             }
+            var i = index.payload;
+            while (i >= 0) {
+                state.array[i].current = false;
+                i--;
+            }
         },
         addError: (state, index) => {
             if (state.array[index.payload].error) {

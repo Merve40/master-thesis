@@ -1,59 +1,173 @@
 [
     {
-        "contract_address": "null",
-        "charterparty": {
-            "$oid": "608ae6da7ffe5fb7f1a56e4b"
-        },
+        "_id": { "$oid": "613b57b775e74f0ed86a6692" },
+        "name": "BL_1631279030767",
+        "contract_address": "0x77242e551A6b2009DADD12B94F7c6c2D563f50ab",
+        "charterparty": { "$oid": "608ae6da7ffe5fb7f1a56e4b" },
         "vessel_id": {
-            "value": "#90291354",
-            "hash": "null"
+            "value": "722",
+            "hash": "0x9507ad732dc3652fa383cfed32a4d6f78bbf4d70dfb76d356d0792c0eff55204"
         },
-        "consignee": {
-            "$oid": "60816738908c872d2e457559"
-        },
+        "consignee": { "$oid": "60816738908c872d2e457559" },
         "notify_party": {
-            "$oid": "6091b4528a1e6f13e37f9c52"
+            "id": { "$oid": "6091b4528a1e6f13e37f9c52" },
+            "value": "null",
+            "hash": "0xefbde2c3aee204a69b7696d4b10ff31137fe78e3946306284f806e2dfc68b805"
         },
         "cargo": {
             "description": {
-                "value": "Wheat, whole grain, type: Einkorn",
-                "hash": "null"
+                "value": "Oat, steel cut",
+                "hash": "0x679c88dde7c5f0407bfaa8518d4aacf84f2aecec42d287a453ad08260462baeb"
             },
             "moisture_level": {
-                "value": "12.3%",
-                "hash": "null"
+                "value": 13,
+                "hash": "0xd7b6990105719101dabeb77144f2a3385c8033acd3af97e9423a695e81ad1eb5"
             },
             "nutrition_levels": {
                 "details": {
-                    "calories": 340,
+                    "calories": "290",
+                    "protein": "19.2 grams",
+                    "carbs": "67 grams",
+                    "sugar": "0.4 grams",
+                    "fiber": "14.7 grams",
+                    "fat": "2.5 grams"
+                },
+                "value": "calories:290,protein:19.2 grams,carbs:67 grams,sugar:0.4 grams,fiber:14.7 grams,fat:2.5 grams,",
+                "hash": "0x78bb79b5b6f64cea064a2ab2daa6e408caf83555b9b65bfa564d920e2b972711"
+            },
+            "weight": {
+                "value": 200,
+                "hash": "0xe71fac6fb785942cc6c6404a423f94f32a28ae66d69ff41494c38bfd4788b2f8"
+            }
+        },
+        "port": {
+            "value": "Duisburg",
+            "hash": "0xf43ac3ae743a1cd7bbe2ce0b8f8a75f0927c268c0d79a76afe9e7401a21fbb23"
+        },
+        "date": {
+            "value": 1631279030767,
+            "hash": "0x018bcd2dd9ae52cb84eb09e36834ecf89751873439c4b45248c20d076b207f26"
+        },
+        "signer": {
+            "id": { "$oid": "60816738908c872d2e45755a" },
+            "signature": "0x266fffddd5a538e26f5a82b5b71095e0f7cdcadec7bd99e938530213b0d52f280dff3a4220797fa882177da4cea8c2d7c13784de1a80929b43c64b43262546ec1b",
+            "on_behalf_of": "charterer"
+        },
+        "issued": true,
+        "deposited": true
+    },
+    {
+        "_id": { "$oid": "613ceefe75e74f0ed86a6696" },
+        "name": "BL_1631383293569",
+        "contract_address": "0xF8AE39EfCdD83dabEe80027431514ba54718902F",
+        "charterparty": { "$oid": "608ae6da7ffe5fb7f1a56e4b" },
+        "vessel_id": {
+            "value": "722",
+            "hash": "0x9507ad732dc3652fa383cfed32a4d6f78bbf4d70dfb76d356d0792c0eff55204"
+        },
+        "consignee": { "$oid": "60816738908c872d2e457559" },
+        "notify_party": {
+            "id": { "$oid": "6091b4528a1e6f13e37f9c52" },
+            "value": "null",
+            "hash": "0xefbde2c3aee204a69b7696d4b10ff31137fe78e3946306284f806e2dfc68b805"
+        },
+        "cargo": {
+            "description": {
+                "value": "Wheat, einkorn",
+                "hash": "0x9f7deb0d30e8d7178ae232349991e7ebc3114fbb73137ce638cbae921e1e4019"
+            },
+            "moisture_level": {
+                "value": 12,
+                "hash": "0xdf6966c971051c3d54ec59162606531493a51404a002842f56009d7e5cf4a8c7"
+            },
+            "nutrition_levels": {
+                "details": {
+                    "calories": "340",
                     "protein": "13.2 grams",
                     "carbs": "72 grams",
                     "sugar": "0.4 grams",
                     "fiber": "10.7 grams",
                     "fat": "2.5 grams"
                 },
-                "value": "calories:340,protein:13.2,grams,carbs:72 grams,sugar:0.4 grams,fiber:10.7 grams,fat:2.5 grams",
-                "hash": "null"
+                "value": "calories:340,protein:13.2 grams,carbs:72 grams,sugar:0.4 grams,fiber:10.7 grams,fat:2.5 grams,",
+                "hash": "0x0a9d6b319d6c8bc7b45325dc105b8c7eb642d3587d2de7665f951b64a0191a06"
             },
             "weight": {
-                "value": "80 tonnes",
-                "hash": "null"
+                "value": 210,
+                "hash": "0xf2192e1030363415d7b4fb0406540a0060e8e2fc8982f3f32289379e11fa6546"
             }
         },
-        "place": {
-            "value": "TODO",
-            "hash": "null"
+        "port": {
+            "value": "Duisburg",
+            "hash": "0xf43ac3ae743a1cd7bbe2ce0b8f8a75f0927c268c0d79a76afe9e7401a21fbb23"
         },
         "date": {
-            "value": "TODO",
-            "hash": "null"
+            "value": 1631383293570,
+            "hash": "0xd6c967d2b4b04635a6076e12354871d71892baf0adf4e3df7b130ad0fd0c0614"
         },
         "signer": {
-            "id": {
-                "$oid": "60816738908c872d2e45755a"
-            },
-            "signature": "null",
+            "id": { "$oid": "60816738908c872d2e45755a" },
+            "signature": "0x0d14b48b9ff2b2df59cd11d47d36f75a3177b0dc3fd1ac058a7a56a3f2f3c5a53cedfbcd1c1c9161f0a0701f8e9e5d74f14acd57e58b867a7a2514b60dd44a381b",
             "on_behalf_of": "charterer"
-        }
+        },
+        "issued": true,
+        "deposited": true
+    },
+    {
+        "_id": { "$oid": "613cf0e575e74f0ed86a669a" },
+        "name": "BL_1631383780830",
+        "contract_address": "0x9F2031dd207C27F5535bA6891dc6fbBA7B2e9fA4",
+        "charterparty": { "$oid": "608ae6da7ffe5fb7f1a56e4b" },
+        "vessel_id": {
+            "value": "722",
+            "hash": "0x9507ad732dc3652fa383cfed32a4d6f78bbf4d70dfb76d356d0792c0eff55204"
+        },
+        "consignee": { "$oid": "60816738908c872d2e457559" },
+        "notify_party": {
+            "id": { "$oid": "6091b4528a1e6f13e37f9c52" },
+            "value": "null",
+            "hash": "0xefbde2c3aee204a69b7696d4b10ff31137fe78e3946306284f806e2dfc68b805"
+        },
+        "cargo": {
+            "description": {
+                "value": "Corn, dried",
+                "hash": "0x31c7a4d0033333ea558075a5257aa2a43011c155689ecea771423f197cba51dc"
+            },
+            "moisture_level": {
+                "value": 13,
+                "hash": "0xd7b6990105719101dabeb77144f2a3385c8033acd3af97e9423a695e81ad1eb5"
+            },
+            "nutrition_levels": {
+                "details": {
+                    "calories": "386",
+                    "protein": "9.9 grams",
+                    "carbs": "75 grams",
+                    "sugar": "5.4 grams",
+                    "fiber": "10.7 grams",
+                    "fat": "5.2 grams"
+                },
+                "value": "calories:386,protein:9.9 grams,carbs:75 grams,sugar:5.4 grams,fiber:10.7 grams,fat:5.2 grams,",
+                "hash": "0xe7221a5eb6df6405e4a642b08b8198937fb384b755fc9f1d3eba9e7f79d7a958"
+            },
+            "weight": {
+                "value": 100,
+                "hash": "0x26700e13983fefbd9cf16da2ed70fa5c6798ac55062a4803121a869731e308d2"
+            }
+        },
+        "port": {
+            "value": "Duisburg",
+            "hash": "0xf43ac3ae743a1cd7bbe2ce0b8f8a75f0927c268c0d79a76afe9e7401a21fbb23"
+        },
+        "date": {
+            "value": 1631383780831,
+            "hash": "0x9974f224eb0c2a030660b9390bd37bf279558cb162b95ce5d813d1d4def93194"
+        },
+        "signer": {
+            "id": { "$oid": "60816738908c872d2e45755a" },
+            "signature": "0xc351969dccc5dd2a73c68b55a97cdd60abf38ee3d8e60ec35106933f249ff98a4471ae58686c4df40d6c3790bdaecdb31a41f7ab25e37ec19601d4ff5c6d99c01c",
+            "on_behalf_of": "charterer"
+        },
+        "issued": true,
+        "deposited": true
     }
 ]
