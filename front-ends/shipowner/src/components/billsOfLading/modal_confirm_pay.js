@@ -9,7 +9,7 @@ const ModalConfirm = ({ show, setShow, submit, bl }) => {
     return (
         <Modal show={show} onHide={() => setShow(false)}>
             <Modal.Header closeButton>
-                <Modal.Title>Please choose a credential</Modal.Title>
+                <Modal.Title>Please assign a credential</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>

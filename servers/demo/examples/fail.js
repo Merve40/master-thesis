@@ -28,7 +28,11 @@ async function issueBL(charterparty) {
     console.log("1 - issueBL");
     var order = await tryWith(async (client) => {
         return (
-            await client.db("charterer").collection("orders").find().toArray()
+            await client
+                .db("charterer")
+                .collection("orders")
+                .find({ status: "open" })
+                .toArray()
         )[0];
     });
     var customer = await tryWith(async (client) => {

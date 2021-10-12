@@ -197,7 +197,7 @@ function DetailBL({ history, element, index, makeToast, onUpdate }) {
                                     color: "gray",
                                 }}
                             >
-                                credential was not issued
+                                credential was not assigned
                             </td>
                         ) : (
                             <td className="col-8">

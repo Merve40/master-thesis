@@ -20,10 +20,8 @@
             },
             "weight": "120 tonnes"
         },
-        "status": "closed",
-        "billOfLading": {
-            "$oid": "613b57b775e74f0ed86a6692"
-        }
+        "status": "open",
+        "billOfLading": "null"
     },
     {
         "charterparty": { "$oid": "608ae6da7ffe5fb7f1a56e4b" },
@@ -86,7 +84,9 @@
             },
             "weight": "250 tonnes"
         },
-        "status": "open",
-        "billOfLading": "null"
+        "status": "closed",
+        "billOfLading": {
+            "$oid": "613b57b775e74f0ed86a6692"
+        }
     }
 ]

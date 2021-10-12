@@ -228,9 +228,15 @@ const DetailPOD = ({ item, makeToast, onUpdate }) => {
                                     wordWrap: "break-word",
                                     wordBreak: "break-all",
                                     textAlign: "justify",
+                                    color:
+                                        item.signature == "null"
+                                            ? "gray"
+                                            : "black",
                                 }}
                             >
-                                {item.signature}
+                                {item.signature == "null"
+                                    ? "not signed"
+                                    : item.signature}
                             </div>
                         </td>
                     </tr>
